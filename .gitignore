@@ -1,0 +1,21 @@
+# directorios de trabajo de terraform (contienen los proveedores y módulos clonados)
+.terraform/
+
+# archivos de estado de terraform (¡MUY IMPORTANTE! contienen datos confidenciales en texto plano)
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+
+# archivos de variables que contienen contraseñas o secretos
+*.tfvars
+*.tfvars.json
+group_vars/
+
+# archivos de configuración locales o secretos del desarrollador
+.terraformrc
+terraform.rc
+
+# archivos de planes guardados (como el 'tfplan' que genera tu script)
+*-tfplan
+tfplan
+*tfplan*

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Pomodoro</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+    <svg class="ring" width="340" height="340">
+        <circle class="track" cx="170" cy="170" r="145"></circle>
+        <circle id="progress" class="progress" cx="170" cy="170" r="145"></circle>
+    </svg>
+
+    <button id="toggle" class="center-btn" aria-label="Start stop">
+        <div id="icon" class="play"></div>
+    </button>
+    <button id="reset" class="reset-btn">↺</button>
+    <input
+        id="minutesInput"
+        class="minutes-input"
+        type="number"
+        min="1"
+        max="180"
+        value="25">    
+
+    <div class="time" id="time">25</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

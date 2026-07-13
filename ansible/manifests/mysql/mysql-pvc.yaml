@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: mysql-pvc
+  namespace: wordpress
+
+spec:
+  # le indicamos que queremos un volumen de 10GiB y que se pueda montar en modo lectura/escritura por un único nodo
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    # disco de 10GiB para la base de datos MySQL
+    requests:
+      storage: 10Gi
+
+# antes debemos comprobar que el cluster tiene un StorageClass llamado "managed-csi" (el que crea AKS por defecto)
+# kubectl get storageclass | grep 'managed-csi'
+
+  storageClassName: managed-csi

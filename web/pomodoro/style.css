@@ -1,0 +1,114 @@
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:radial-gradient(circle at center,#2a2d38,#11141d);
+    font-family:system-ui,sans-serif;
+}
+.app{position:relative;width:340px;height:340px;}
+.ring{transform:rotate(-90deg);}
+.track,.progress{
+    fill:none;
+    stroke-width:10;
+}
+.track{stroke:rgba(255,255,255,.08);}
+.progress{
+    stroke:#ffffff;
+    stroke-linecap:round;
+    filter:drop-shadow(0 0 10px rgba(255,255,255,.35));
+    transition:stroke-dashoffset 1s linear;
+}
+.center-btn{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:110px;
+    height:110px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(12px);
+    box-shadow:0 8px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.06);
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.play{
+    width:0;height:0;
+    border-top:18px solid transparent;
+    border-bottom:18px solid transparent;
+    border-left:28px solid white;
+    margin-left:8px;
+}
+.stop{
+    width:28px;
+    height:28px;
+    background:white;
+    border-radius:4px;
+}
+.time{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:78%;
+    color:rgba(255,255,255,.65);
+    font-size:1rem;
+    letter-spacing:.3rem;
+}
+.reset-btn {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.8);
+
+    font-size: 22px;
+    cursor: pointer;
+
+    backdrop-filter: blur(10px);
+
+    transition: 0.2s;
+}
+
+.reset-btn:hover {
+    transform: translateX(-50%) scale(1.1);
+    background: rgba(255,255,255,0.12);
+}
+.minutes-input {
+    position: absolute;
+    bottom: -90px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 70px;
+    height: 40px;
+
+    border: none;
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.08);
+    color: white;
+
+    text-align: center;
+    font-size: 18px;
+
+    backdrop-filter: blur(10px);
+    outline: none;
+}
+
+.minutes-input::-webkit-inner-spin-button,
+.minutes-input::-webkit-outer-spin-button {
+    opacity: 0.5;
+}

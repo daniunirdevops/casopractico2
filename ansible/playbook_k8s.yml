@@ -1,0 +1,60 @@
+--- 
+- name: Desplegar recursos Kubernetes
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+# la utilización de manifests me permite separar las diferentes tareas
+
+  tasks:
+    - name: Crear namespace wordpress
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/namespace.yaml
+
+# secretos de Mysql
+    - name: MySQL Secret
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/mysql/mysql-secret.yaml
+
+  # creamos el PVC de MySQL que sea PersistentVolumeClaim, es decir la petición de un volumen persistente
+  # Kubernetes se encargará de crear un PersistentVolume (PV) que cumpla con la petición del PVC
+
+    - name: MySQL PVC
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/mysql/mysql-pvc.yaml
+
+    - name: MySQL Service headless
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/mysql/mysql-headless-service.yaml
+
+    - name: MySQL StatefulSet
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/mysql/mysql-statefulset.yaml
+
+    # Wordpress, utilizaremos un PVC ya que tenemos temas, plugins...
+    - name: WordPress PVC
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/wordpress/wordpress-pvc.yaml
+
+    # - name: Aplicamos el template manifest
+    #   template:
+    #     src: manifests/wordpress-deployment.yaml.j2
+    #     dest: /tmp/wordpress-deployment.yaml
+
+    - name: WordPress Deployment
+      kubernetes.core.k8s:
+        state: present
+        # src: manifests/wordpress-deployment.yaml
+        # src: /tmp/wordpress-deployment.yaml
+        definition: "{{ lookup('template', 'manifests/wordpress/wordpress-deployment.yaml.j2') }}"        
+
+    - name: WordPress Service
+      kubernetes.core.k8s:
+        state: present
+        src: manifests/wordpress/wordpress-service.yaml        

@@ -1,0 +1,64 @@
+---
+- name: App web en Podman
+# definición del host de destino (la VM creada en Azure)
+  hosts: podman_vm
+
+# privilegios de ejecución
+  become: true
+
+# definición de variables para mejor legibilidad y mantenimiento
+  vars:
+    # web_variant: nginx 
+    # web_image  : "{{ acr_login_server }}/web-{{ web_variant }}:{{ image_tag }}"
+    web_image  : "{{ acr_login_server }}/web:{{ image_tag }}"
+    name_container : "cp2-web"
+    service_name: "container-{{name_container}}"
+
+  tasks:
+
+    - name: Esperar que el puerto SSH de la VM esté abierto y activo
+      ansible.builtin.wait_for_connection:
+        delay: 5      # Espera 5 segundos antes de probar
+        timeout: 120  # Espera un màxim de 2 minutos a que la VM haya arrancado
+
+    - name: Autenticación en el ACR
+      containers.podman.podman_login:
+        registry: "{{ acr_login_server }}"
+        username: "{{ acr_username }}"
+        password: "{{ acr_password }}"
+
+    - name: Descargar la imagen de la aplicación web
+      containers.podman.podman_image:
+        name: "{{ web_image }}"
+        force: true 
+      register: image_pull
+
+    # creamos el contenedor en estado 'created'. Para después Systemd se encargue de arrancarlo
+    - name: Configurar el contenedor de Podman
+      containers.podman.podman_container:
+        name: "{{ name_container }}"
+        image: "{{ web_image }}"
+        state: created
+        # exponemos el puerto con el que se comunicará
+        ports:
+          - "443:443"
+      register: container_info
+
+    - name: Generar el fichero de servicio de Systemd para el contenedor
+      containers.podman.podman_generate_systemd:
+        name: "{{ name_container }}"
+        dest: /etc/systemd/system/
+        restart_policy: always
+        use_names: true
+        new: true
+      when: container_info.changed or image_pull.changed
+      notify: Recargar y reiniciar servicio web
+
+  handlers:
+    - name: Recargar y reiniciar servicio web
+      ansible.builtin.systemd_service:
+        name: "{{ service_name }}"
+        daemon_reload: true
+        enabled: true
+        state: restarted
+

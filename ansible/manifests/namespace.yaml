@@ -1,0 +1,6 @@
+# crea un namespace en Kubernetes para el despliegue de la aplicación WordPress y todo lo que necesita (MySQL, PVC, etc.)
+apiVersion: v1
+kind: Namespace
+metadata:
+  # nombre del namespace
+  name: wordpress
