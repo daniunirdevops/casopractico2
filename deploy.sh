@@ -136,7 +136,8 @@ if [ -z "$ACCION" ] || [ "$ACCION" == "start" ]; then
     echo "Iniciando aprovisionamiento de software con Ansible..."
 
     # Ejecutamos el playbook apuntando al inventario local
-    ansible-playbook -i ansible/hosts.ini ansible/playbook_podman.yml
+    SSH_PRIVATE_KEY="${TF_VAR_ssh_public_key_path%.pub}"
+    ansible-playbook -i ansible/hosts.ini ansible/playbook_podman.yml --private-key "$SSH_PRIVATE_KEY"
 
     # Comprobación de acceso a la aplicación web desplegada en la máquina virtual creada en Azure, utilizando la IP pública obtenida de Terraform.
     IP_PODMAN=$(cd terraform && terraform output -raw vm_public_ip)
